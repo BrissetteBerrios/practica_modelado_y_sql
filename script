@@ -1,0 +1,289 @@
+--Creamos el esquema
+create schema practica_bmbt authorization eqdsrlwk;
+
+--Anadimos la estructura
+
+--Para poder anadir el coche primero hay que anadir lo siguiente
+
+--Tabla Grupo Empresarial 
+create table practica_bmbt.grupo_empresarial(
+id_grupo_empresarial SERIAL not null, --PK 
+grupo_empresarial varchar(300) not null, 
+descripcion varchar(500) null );
+
+--Ahora anadimos la PK del grupo empresarial
+alter table practica_bmbt.grupo_empresarial
+add constraint grupo_empresarial_PK primary key (id_grupo_empresarial);
+
+--Tabla Marca
+create table practica_bmbt.marca(
+id_marca SERIAL not null, --PK 
+id_grupo_empresarial int not null, --FK
+marca varchar (300) not null,
+descripcion varchar (500) null );
+
+--ahora anadimos las PK y FK de la tabla de marca
+alter table practica_bmbt.marca
+add constraint marca_PK primary key (id_marca);
+
+alter table practica_bmbt.marca
+add constraint marca_FK foreign key (id_grupo_empresarial)
+references practica_bmbt.grupo_empresarial (id_grupo_empresarial); 
+
+--Tabla Modelo
+
+create table practica_bmbt.modelo(
+id_modelo SERIAL not null, --PK 
+id_marca int not null, --FK 
+modelo varchar (300) not null,
+descripcion varchar (500) null
+); 
+
+--Ahora creamos la PK y FK de la tabla de modelo 
+alter table practica_bmbt.modelo
+add constraint modelo_PK primary key (id_modelo);
+
+alter table practica_bmbt.modelo
+add constraint modelo_FK foreign key (id_marca)
+references practica_bmbt.marca (id_marca);
+
+--Tabla Color
+
+create table practica_bmbt.color(
+id_color SERIAL not null, --PK
+color varchar (300) not null,
+descripcion varchar (500) null);
+
+--Ahora creamos la PK de la tabla de color
+alter table practica_bmbt.color
+add constraint color_PK primary key (id_color);
+
+--Tabla Compania Aseguradora
+
+create table practica_bmbt.compania_aseguradora(
+id_compania_aseguradora SERIAL not null, --PK 
+compania_aseguradora varchar (500) not null, 
+descripcion varchar (500) null 
+);
+
+--Ahora creamos la PK de la tabla de compania aseguradora
+alter table practica_bmbt.compania_aseguradora
+add constraint compania_aseguradora_PK primary key (id_compania_aseguradora);
+
+--Tabla Coche
+
+create table practica_bmbt.coche(
+id_coche SERIAL not null, --PK 
+id_modelo int not null, --FK
+id_color int not null, --FK
+id_compania_aseguradora int not null, --FK 
+num_poliza varchar (300) not null,
+matricula varchar (300) not null, 
+num_total_kilometros int not null default 0, 
+fecha_compra varchar (300) not null,
+descripcion varchar (500) null);
+
+--Creamos los PK y FK de la tabla de coche
+alter table practica_bmbt.coche
+add constraint coche_PK primary key (id_coche);
+
+alter table practica_bmbt.coche
+add constraint coche_modelo_FK foreign key (id_modelo)
+references practica_bmbt.modelo (id_modelo);
+
+alter table practica_bmbt.coche
+add constraint coche_color_FK foreign key (id_color)
+references practica_bmbt.color (id_color);
+
+alter table practica_bmbt.coche
+add constraint coche_compania_aseguradora_FK foreign key (id_compania_aseguradora)
+references practica_bmbt.compania_aseguradora (id_compania_aseguradora);
+
+
+--Tabla Moneda
+
+create table practica_bmbt.moneda(
+id_moneda varchar (300) not null, --PK
+moneda varchar (300) not null, 
+descripcion varchar (500) null);
+
+--Creamos el PK de la tabla de moneda
+alter table practica_bmbt.moneda
+add constraint moneda_PK primary key (id_moneda);
+
+--Tabla Revision 
+
+create table practica_bmbt.revision(
+id_revision SERIAL not null, --PK 
+fecha_revision date not null, --PK
+id_coche int not null, --PK, FK
+id_moneda varchar (300), --FK
+importe decimal not null, 
+kilometros int not null, 
+descripcion varchar (500)
+);
+
+--Creamos los PK y FK de la tabla de revision 
+alter table practica_bmbt.revision
+add constraint revision_PK primary key (id_revision, fecha_revision, id_coche);
+
+alter table practica_bmbt.revision
+add constraint revision_coche_FK foreign key (id_coche)
+references practica_bmbt.coche (id_coche);
+
+alter table practica_bmbt.revision
+add constraint revision_moneda_FK foreign key (id_moneda)
+references practica_bmbt.moneda (id_moneda);
+
+
+--Insertamos los datos 
+
+--Grupo empresarial 
+
+insert into practica_bmbt.grupo_empresarial ( grupo_empresarial, descripcion)
+values ( 'Toyota','');
+
+insert into practica_bmbt.grupo_empresarial (grupo_empresarial, descripcion)
+values ( 'VAN', '');
+
+insert into practica_bmbt.grupo_empresarial (grupo_empresarial, descripcion)
+values ( 'FCA', '');
+
+insert into practica_bmbt.grupo_empresarial (grupo_empresarial, descripcion)
+values ('General Motors', '');
+
+insert into practica_bmbt.grupo_empresarial (grupo_empresarial, descripcion)
+values ('Ford', '');
+
+
+
+-- Marca
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ('1','Toyota', '');
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ( '2', 'Audi', '');
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ( '3', 'Dodge', '');
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ( '3', 'Jeep', '');
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ( '4', 'Cadillac', '');
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ( '5', 'Ford', '');
+
+insert into practica_bmbt.marca (id_grupo_empresarial, marca, descripcion)
+values ( '3', 'Fiat', '');
+
+
+
+--Modelo
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ('1','Yaris', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '2', 'A1', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '3', 'Avenger', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '4', 'Wrangler', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '5', 'Escalade', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '6', 'Focus', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '7', '500C', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '1', 'Camry', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '2', 'A2', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '3', 'Caliber', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '4', 'Cherokee', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '5', 'BLS', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '6', 'Explorer', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '7', '500', '');
+
+insert into practica_bmbt.modelo (id_marca, modelo, descripcion)
+values ( '1', 'Corolla', '');
+
+--Color
+
+insert into practica_bmbt.color (color, descripcion)
+values ('rojo', '');
+
+insert into practica_bmbt.color (color, descripcion)
+values ('azul', '');
+
+insert into practica_bmbt.color (color, descripcion)
+values ('blanco', '');
+
+insert into practica_bmbt.color (color, descripcion)
+values ('negro', '');
+
+--Compania aseguradora
+
+insert into practica_bmbt.compania_aseguradora (compania_aseguradora, descripcion) 
+values ('Mapfre', '' );
+
+insert into practica_bmbt.compania_aseguradora (compania_aseguradora, descripcion) 
+values ('MMT', '' );
+
+insert into practica_bmbt.compania_aseguradora (compania_aseguradora, descripcion) 
+values ('AXA', '' );
+
+
+--Coche
+
+insert into practica_bmbt.coche (id_modelo, id_color, id_compania_aseguradora, num_poliza, matricula, num_total_kilometros, fecha_compra, descripcion)
+values ( '1', '1', '1', '12345', '1234AB', '1500', '2022-01-15', '');
+
+insert into practica_bmbt.coche (id_modelo, id_color, id_compania_aseguradora, num_poliza, matricula, num_total_kilometros, fecha_compra, descripcion)
+values ( '2', '2', '2', '67891', '1234CD', '20000', '2022-02-7', '');
+
+insert into practica_bmbt.coche (id_modelo, id_color, id_compania_aseguradora, num_poliza, matricula, num_total_kilometros, fecha_compra, descripcion)
+values ( '3', '3', '3', '16273', '1234EF', '18000', '2022-03-6', '');
+
+insert into practica_bmbt.coche (id_modelo, id_color, id_compania_aseguradora, num_poliza, matricula, num_total_kilometros, fecha_compra, descripcion)
+values ( '1', '2', '2', '39401', '1234GH', '25000', '2022-03-15', '');
+
+--Moneda 
+
+insert into practica_bmbt.moneda (id_moneda, moneda, descripcion)
+values ('EUR', 'euro', '');
+
+insert into practica_bmbt.moneda (id_moneda, moneda, descripcion)
+values ('DOL', 'dolar_americano', '');
+
+
+--Revision
+
+
+insert into practica_bmbt.revision (fecha_revision, id_coche, id_moneda, importe, kilometros, descripcion)
+values ('2022-08-7', '1', 'EUR', '100', '30000', 'primera_revision');
+
+insert into practica_bmbt.revision (fecha_revision, id_coche, id_moneda, importe, kilometros, descripcion)
+values ('2022-11-5', '2','EUR', '150', '36000', 'primera_revision');
+
