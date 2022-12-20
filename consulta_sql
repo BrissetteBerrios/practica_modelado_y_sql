@@ -1,0 +1,10 @@
+--Consulta SQL
+
+select b.modelo, c.marca, d."grupo_empresarial" as "grupo", a.fecha_compra, a.matricula, e.color, a.num_total_kilometros, f.compania_aseguradora, 
+a.num_poliza from practica_bmbt.coche a
+
+inner join practica_bmbt.modelo b on a.id_modelo = b.id_modelo 
+inner join practica_bmbt.marca c on b.id_marca = c.id_marca 
+inner join practica_bmbt.grupo_empresarial d on c.id_grupo_empresarial = d.id_grupo_empresarial 
+inner join practica_bmbt.color e on a.id_color = e.id_color 
+inner join practica_bmbt.compania_aseguradora f on a.id_compania_aseguradora = f.id_compania_aseguradora 
